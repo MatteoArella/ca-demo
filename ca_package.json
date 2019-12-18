@@ -1,0 +1,16 @@
+{
+  "name": "ca_web_app",
+  "version": "1.0.0",
+  "description": "CA web app",
+  "license": "MIT",
+  "repository": {},
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "when": "^3.7.8",
+    "body-parser": "^1.19.0"
+  }
+}

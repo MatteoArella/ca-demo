@@ -1,0 +1,25 @@
+dir                     = "/etc/requester"
+RANDFILE                = $dir/private/random
+
+####################################################################
+[req]
+default_bits       = 2048
+default_keyfile    = $dir/private/server.key.pem
+distinguished_name = server_distinguished_name
+req_extensions     = server_req_extensions
+string_mask        = utf8only
+prompt             = no
+
+####################################################################
+[server_distinguished_name]
+countryName             = "IT"
+stateOrProvinceName     = "Italy"
+localityName            = "Rome"
+organizationName        = "Organization A"
+commonName              = "Server Signing Requester"
+
+####################################################################
+[ server_req_extensions ]
+subjectKeyIdentifier = hash
+basicConstraints     = CA:false
+keyUsage             = digitalSignature, keyEncipherment
