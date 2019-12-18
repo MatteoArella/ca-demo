@@ -98,11 +98,9 @@ generateCert = (certReqPath, certPath) => {
 };
 
 app.get('/certs', (req, res) => {
-	sequence([
-		() => { return accessFile(certPath); },
-		() => { return readFile(certPath); }
-	]).then((results) => {
-		return res.status(200).end(results[1]);
+	readFile(certPath)
+	.then((results) => {
+		return res.status(200).end(results);
 	}).otherwise((error) => {
 		return res.sendStatus(404);
 	});
