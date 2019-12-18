@@ -97,11 +97,20 @@ generateCert = (certReqPath, certPath) => {
 
 // return CA certificate
 app.get('/certs', (req, res) => {
-	sequence([
-		() => { return accessFile(certPath); },
-		() => { return readFile(certPath); }
-	]).then((results) => {
-		return res.status(200).end(results[1]);
+	readFile(certPath)
+	.then((results) => {
+		return res.status(200).end(results);
+	}).otherwise((error) => {
+		return res.sendStatus(404);
+	});
+});
+
+// return certificate by its serial
+app.get('/cert/:id', (req, res) => {
+	serial = req.params['id']
+	readFile(`${newCertsPath}/${serial}.pem`)
+	.then((results) => {
+		return res.status(200).end(results);
 	}).otherwise((error) => {
 		return res.sendStatus(404);
 	});
@@ -109,11 +118,9 @@ app.get('/certs', (req, res) => {
 
 // return index db file
 app.get('/certs/all', (req, res) => {
-	sequence([
-		() => { return accessFile(indexFilePath); },
-		() => { return readFile(indexFilePath); }
-	]).then((results) => {
-		return res.status(200).end(results[1]);
+	readFile(indexFilePath)
+	.then((results) => {
+		return res.status(200).end(results);
 	}).otherwise((error) => {
 		return res.sendStatus(404);
 	});
