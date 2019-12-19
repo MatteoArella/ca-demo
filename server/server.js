@@ -111,7 +111,7 @@ app.get('/certs/new', (req, res) => {
 	.then((cert) => {
 		return res.status(200).end(cert);
 	}).otherwise((err) => {
-		return res.status(404).send(err);
+		return res.sendStatus(404);
 	});
 });
 

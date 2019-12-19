@@ -9,7 +9,7 @@ ENV OPENSSL_DIR=${target_dir}
 
 RUN mkdir -p $target_dir
 
-COPY ca_openssl.cnf $target_dir/openssl.cnf
+COPY openssl.cnf $target_dir/
 
 WORKDIR $target_dir 
 RUN mkdir certs newcerts crl db private
@@ -21,8 +21,8 @@ RUN openssl rand -hex 16 > db/serial
 RUN echo 1001 > db/crlnumber
 
 WORKDIR /usr/src/app
-COPY ca_server.js ./server.js
-COPY ca_package.json ./package.json
+COPY server.js ./
+COPY package.json ./
 
 RUN npm install
 

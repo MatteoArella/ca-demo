@@ -106,8 +106,8 @@ app.get('/certs', (req, res) => {
 });
 
 // return certificate by its serial
-app.get('/cert/:id', (req, res) => {
-	serial = req.params['id']
+app.get('/cert/:serial', (req, res) => {
+	serial = req.params['serial']
 	readFile(`${newCertsPath}/${serial}.pem`)
 	.then((results) => {
 		return res.status(200).end(results);
@@ -128,11 +128,9 @@ app.get('/certs/all', (req, res) => {
 
 // return revoked certificates list
 app.get('/certs/crl', (req, res) => {
-	sequence([
-		openssl(`ca -gencrl -config ${opensslConfig} -passin ${secret} -out ${crlFilePath}`),
-		() => { return readFile(crlFilePath); }
-	]).then((results) => {
-		return res.status(200).end(results[1]);
+	readFile(crlFilePath)
+	.then((crl) => {
+		return res.status(200).end(crl);
 	}).otherwise((error) => {
 		return res.sendStatus(404);
 	});
@@ -156,9 +154,12 @@ app.post('/certs', (req, res) => {
 app.delete('/certs', (req, res) => {
 	serial = req.query['serial']
 	reason = req.query['reason'] || 'keyCompromise'
-	openssl(`ca -config ${opensslConfig} -revoke ${newCertsPath}/${serial}.pem -passin ${secret} -crl_reason ${reason}`)()
-	.then((results) => {
-		return res.sendStatus(200);
+	sequence([
+		openssl(`ca -config ${opensslConfig} -revoke ${newCertsPath}/${serial}.pem -passin ${secret} -crl_reason ${reason}`),
+		openssl(`ca -gencrl -config ${opensslConfig} -passin ${secret} -out ${crlFilePath}`),
+		() => { return readFile(crlFilePath); }
+	]).then((results) => {
+		return res.status(200).end(results[2]);
 	}).otherwise((error) => {
 		return res.sendStatus(400);
 	});

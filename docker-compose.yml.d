@@ -1,4 +1,3 @@
-
 #!/bin/bash
 ca_service_host=$1
 cat <<EOF > docker-compose.yml
@@ -37,12 +36,10 @@ services:
     environment: 
       CA_SERVICE_HOST: $ca_service_host
     deploy:
-      #placement:
-      #  constraints: [node.hostname == requester]
       placement:
         constraints: [node.role == worker]
       mode: replicated
-      replicas: 6
+      replicas: 2
     networks:
       - local
     secrets:

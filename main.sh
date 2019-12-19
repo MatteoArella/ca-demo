@@ -1,6 +1,6 @@
 #!/bin/bash
 ca_manager_name="ca-manager"
-workers=("requester1" "requester2")
+workers=("server1" "server2")
 stack_name="ca_stack"
 manager_virtual_memory=2048
 worker_virtual_memory=1024
@@ -31,12 +31,12 @@ function create {
 
 function build {
     # build and push CA service docker image
-    docker build -t ca-image:latest --no-cache -f "ca_Dockerfile" .
+    docker build -t ca-image:latest --no-cache -f "ca/Dockerfile" ca
     docker tag ca-image:latest 127.0.0.1:5000/ca-image:latest
     docker push 127.0.0.1:5000/ca-image:latest
 
     # build and push certificate signing request service docker image
-    docker build -t request-image:latest --no-cache -f "request_Dockerfile" .
+    docker build -t request-image:latest --no-cache -f "server/Dockerfile" server
     docker tag request-image:latest 127.0.0.1:5000/request-image:latest
     docker push 127.0.0.1:5000/request-image:latest
 }

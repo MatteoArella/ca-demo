@@ -9,15 +9,15 @@ ENV OPENSSL_DIR=${target_dir}
 
 RUN mkdir -p $target_dir
 
-COPY request_openssl.cnf $target_dir/openssl.cnf
+COPY openssl.cnf $target_dir/
 
 WORKDIR $target_dir 
 RUN mkdir certs private
 RUN chmod 700 private
 
 WORKDIR /usr/src/app
-COPY request_server.js ./server.js
-COPY request_package.json ./package.json
+COPY server.js ./
+COPY package.json ./
 
 RUN npm install
 
